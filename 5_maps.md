@@ -74,3 +74,9 @@ When a Vietnamese person visits the home page, incrementing (and possibly creati
 n := hits[Key{"/ref/spec", "ch"}]
 ```
 
+### Maps are reference types
+
+Map types are reference types, like pointers or slices, and so the value of m above is nil; it doesn't point to an initialized map. A nil map behaves like an empty map when reading, but attempts to write to a nil map will cause a runtime panic; don't do that. To initialize a map, use the built in make function:
+
+Example:-
+https://github.com/inancgumus/learngo/blob/master/26-pointers/exercises/04-simplify/solution/main.go

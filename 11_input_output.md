@@ -11,6 +11,16 @@
 - As long as something implements io.Reader you can read from it and if it implements io.Writer you can write to it
 
 
+#### A simple program to read lines
+
+```Go
+	in := bufio.NewScanner(os.Stdin)
+
+	for in.Scan() {
+		fmt.Println("Scanned Text ", in.Text())
+	}
+```
+
 ### Links
 
 https://medium.com/@andreiboar/fundamentals-of-i-o-in-go-c893d3714deb

@@ -164,3 +164,64 @@ Circle and rect should implement area and perimeter
 
 A type never declares that it implements a given interface. If an interface exists and a type has the proper methods defined, then the type automatically fulfills that interface.
 
+### Slices
+
+#### Capacity
+
+* Each element in a slice is assigned to consecutive memory locations, which makes it quick to read or
+write these values. Every slice has a capacity, which is the number of consecutive memory locations reserved. 
+This can be larger than the length.
+
+* Each time you append to a slice, one or more values is added to the end of
+the slice. Each value added increases the length by one. When the length
+reaches the capacity, there’s no more room to put values.
+
+* If you try to add additional values when the length equals the capacity, the append function
+uses the Go runtime to allocate a new slice with a larger capacity. The values in the original slice are copied to the new slice, the new values are added to the end, and the new slice is returned.
+
+* When a slice grows via append, it takes time for the Go runtime to allocate new memory and copy the existing data from the old memory to the new. The old memory also needs to be garbage collected. 
+For this reason, the Go runtime usually increases a slice by more than one each time it runs out of capacity. 
+
+The rules as of Go 1.14 are to double the size of the slice when the capacity is less than 1,024 and then grow by at least 25%
+afterward.
+
+* One common beginner mistake is to try to populate those initial elements using append:
+
+```Go
+  x := make([]int, 5)
+  x = append(x, 10)
+```
+
+The 10 is placed at the end of the slice, after the zero values in positions 0–
+4 because append always increases the length of a slice. The value of x is
+now [0 0 0 0 0 10], with a length of 6 and a capacity of 10 (the capacity was
+doubled as soon as the sixth element was appended).
+
+We can also specify an initial capacity with make:
+
+```Go
+  x := make([]int, 5, 10)
+```
+This creates an int slice with a length of 5 and a capacity of 10.
+
+```
+  x := make([]int, 0, 10) // Recommeded way
+```
+
+In this case, we have a non-nil slice with a length of 0, but a capacity of 10.
+Since the length is 0, we can’t directly index into it, but we can append
+values to it:
+
+```
+  x := make([]int, 0, 10) // 10 is capacity. 
+  x = append(x, 5,6,7,8)
+```
+
+The value of x is now [5 6 7 8], with a length of 4 and a capacity of 10.
+
+```
+  x := []int{1, 2, 3, 4}
+  y := x[:2] //  [1, 2]
+  d := x[1:3] // [2, 3]
+```
+
